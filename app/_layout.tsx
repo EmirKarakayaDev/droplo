@@ -13,6 +13,9 @@ import "../global.css";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { View } from "react-native"; // Added View import
+
 export default function RootLayout() {
     const [loaded, error] = useFonts({
         DMMono_400Regular,
@@ -21,7 +24,9 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (loaded || error) {
-            SplashScreen.hideAsync();
+            SplashScreen.hideAsync().catch(() => {
+                /* ignore */
+            });
         }
     }, [loaded, error]);
 
@@ -30,15 +35,17 @@ export default function RootLayout() {
     }
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                    contentStyle: { backgroundColor: "#f0f9ff" }, // sky-50
-                }}
-            >
-                <Stack.Screen name="index" />
-            </Stack>
-        </GestureHandlerRootView>
+        <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+                <Stack
+                    screenOptions={{
+                        headerShown: false,
+                        contentStyle: { backgroundColor: "#f0f9ff" }, // sky-50
+                    }}
+                >
+                    <Stack.Screen name="index" />
+                </Stack>
+            </GestureHandlerRootView>
+        </SafeAreaProvider>
     );
 }

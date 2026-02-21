@@ -5,10 +5,9 @@ import Animated, {
     useAnimatedStyle,
     withTiming,
     interpolate,
-    Extrapolate,
+    Extrapolation,
 } from "react-native-reanimated";
 import { WaterBrand } from "../types/water";
-import { Colors } from "../constants/colors";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.85;
@@ -54,11 +53,14 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
 
     return (
         <Pressable onPress={flipCard} className="items-center justify-center">
-            <View style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}>
+            <View
+                style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
+                className="shadow-2xl shadow-sky-900/20 rounded-3xl"
+            >
                 {/* FRONT FACE */}
                 <Animated.View
                     style={[frontAnimatedStyle]}
-                    className="w-full h-full bg-white rounded-3xl shadow-xl overflow-hidden border border-sky-100"
+                    className="w-full h-full bg-white rounded-3xl overflow-hidden border border-sky-100"
                 >
                     {/* Header Info */}
                     <View className="p-8 flex-1 justify-between">
@@ -119,7 +121,7 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                 {/* BACK FACE */}
                 <Animated.View
                     style={[backAnimatedStyle]}
-                    className="w-full h-full bg-sky-900 rounded-3xl shadow-xl overflow-hidden border border-sky-800"
+                    className="w-full h-full bg-sky-900 rounded-3xl overflow-hidden border border-sky-800"
                 >
                     <View className="p-8 flex-1">
                         <Text className="text-sky-400 text-[10px] uppercase tracking-[6px] font-bold mb-6" style={{ fontFamily: "DMMono_500Medium" }}>
@@ -131,9 +133,17 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                             <Text className="text-sky-300 text-[10px] uppercase font-bold" style={{ fontFamily: "DMMono_400Regular" }}>
                                 TDS (Total Dissolved Solids)
                             </Text>
-                            <Text className="text-white text-4xl" style={{ fontFamily: "DMMono_500Medium" }}>
-                                {water.tds} <Text className="text-lg">mg/L</Text>
-                            </Text>
+                            <View className="flex-row items-baseline">
+                                <Text
+                                    className="text-white text-5xl pt-2"
+                                    style={{ fontFamily: "DMMono_500Medium", lineHeight: 60 }}
+                                >
+                                    {water.tds}
+                                </Text>
+                                <Text className="text-sky-300 text-lg ml-2" style={{ fontFamily: "DMMono_400Regular" }}>
+                                    mg/L
+                                </Text>
+                            </View>
                         </View>
 
                         {/* Mineral List - "Lab Report" Style */}
@@ -141,16 +151,19 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                             <Text className="text-sky-500 text-[10px] uppercase font-bold mb-3" style={{ fontFamily: "DMMono_500Medium" }}>
                                 Mineral Content
                             </Text>
-                            {Object.entries(water.minerals || {}).map(([key, value]) => (
-                                <View key={key} className="flex-row justify-between py-2 border-b border-sky-800/50">
-                                    <Text className="text-sky-300 text-xs capitalize" style={{ fontFamily: "DMMono_400Regular" }}>
-                                        {key}
-                                    </Text>
-                                    <Text className="text-white text-xs font-bold" style={{ fontFamily: "DMMono_500Medium" }}>
-                                        {value.toFixed(1)} <Text className="text-[8px] text-sky-400">mg/L</Text>
-                                    </Text>
-                                </View>
-                            ))}
+                            {Object.entries(water.minerals || {}).map(([key, value]) => {
+                                if (value === undefined || value === null) return null;
+                                return (
+                                    <View key={key} className="flex-row justify-between py-2 border-b border-sky-800/50">
+                                        <Text className="text-sky-300 text-xs capitalize" style={{ fontFamily: "DMMono_400Regular" }}>
+                                            {key}
+                                        </Text>
+                                        <Text className="text-white text-xs font-bold" style={{ fontFamily: "DMMono_500Medium" }}>
+                                            {(value as number).toFixed(1)} <Text className="text-[8px] text-sky-400">mg/L</Text>
+                                        </Text>
+                                    </View>
+                                );
+                            })}
                         </View>
 
                         {/* Certification / Footer */}
