@@ -1,22 +1,38 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList, View, Dimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { WaterCard } from "../components/WaterCard";
 import { MOCK_WATERS } from "../constants/mockData";
 
-const { height } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function Home() {
+    const insets = useSafeAreaInsets();
+
+    // Calculate the actual visible height for each card item
+    const ITEM_HEIGHT = SCREEN_HEIGHT;
+
     return (
-        <SafeAreaView className="flex-1 bg-sky-50" edges={["top", "bottom"]}>
+        <View className="flex-1 bg-sky-50">
             <StatusBar style="dark" />
 
-            <View className="flex-1 items-center justify-center">
-                {/* For now, just show the first card to test the animation */}
-                {MOCK_WATERS[0] ? (
-                    <WaterCard water={MOCK_WATERS[0]} />
-                ) : null}
-            </View>
-        </SafeAreaView>
+            <FlatList
+                data={MOCK_WATERS}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <View
+                        style={{ height: ITEM_HEIGHT }}
+                        className="items-center justify-center"
+                    >
+                        <WaterCard water={item} />
+                    </View>
+                )}
+                pagingEnabled
+                showsVerticalScrollIndicator={false}
+                decelerationRate="fast"
+                snapToInterval={ITEM_HEIGHT}
+                snapToAlignment="start"
+            />
+        </View>
     );
 }

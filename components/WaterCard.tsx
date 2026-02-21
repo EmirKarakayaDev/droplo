@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Pressable, Dimensions } from "react-native";
+import { View, Text, Pressable, Dimensions, ScrollView } from "react-native";
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
@@ -63,7 +63,7 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                     className="w-full h-full bg-white rounded-3xl overflow-hidden border border-sky-100"
                 >
                     {/* Header Info */}
-                    <View className="p-8 flex-1 justify-between">
+                    <View className="px-8 py-6 flex-1 justify-between">
                         <View className="flex-row justify-between items-start">
                             <View>
                                 <Text className="text-sky-400 text-[10px] uppercase tracking-[4px] font-bold" style={{ fontFamily: "DMMono_500Medium" }}>
@@ -84,11 +84,15 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                         <View>
                             <Text
                                 className="text-sky-900 text-6xl tracking-tighter"
-                                style={{ fontFamily: "DMMono_500Medium" }}
+                                style={{
+                                    fontFamily: "DMMono_500Medium",
+                                    lineHeight: 72, // Slightly increased
+                                    paddingBottom: 4, // Safety for descenders
+                                }}
                             >
                                 {water.name.toLowerCase()}
                             </Text>
-                            <View className="h-1 w-12 bg-sky-500 mt-2" />
+                            <View className="h-1 w-12 bg-sky-500" />
                         </View>
 
                         {/* Big pH Indicator */}
@@ -123,20 +127,20 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                     style={[backAnimatedStyle]}
                     className="w-full h-full bg-sky-900 rounded-3xl overflow-hidden border border-sky-800"
                 >
-                    <View className="p-8 flex-1">
-                        <Text className="text-sky-400 text-[10px] uppercase tracking-[6px] font-bold mb-6" style={{ fontFamily: "DMMono_500Medium" }}>
+                    <View className="px-8 py-6 flex-1">
+                        <Text className="text-sky-400 text-[10px] uppercase tracking-[6px] font-bold mb-4" style={{ fontFamily: "DMMono_500Medium" }}>
                             Chemical Composition
                         </Text>
 
                         {/* TDS Highlight */}
-                        <View className="mb-8">
+                        <View className="mb-6">
                             <Text className="text-sky-300 text-[10px] uppercase font-bold" style={{ fontFamily: "DMMono_400Regular" }}>
                                 TDS (Total Dissolved Solids)
                             </Text>
                             <View className="flex-row items-baseline">
                                 <Text
-                                    className="text-white text-5xl pt-2"
-                                    style={{ fontFamily: "DMMono_500Medium", lineHeight: 60 }}
+                                    className="text-white text-5xl pt-1"
+                                    style={{ fontFamily: "DMMono_500Medium", lineHeight: 54 }}
                                 >
                                     {water.tds}
                                 </Text>
@@ -147,14 +151,14 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                         </View>
 
                         {/* Mineral List - "Lab Report" Style */}
-                        <View className="flex-1">
-                            <Text className="text-sky-500 text-[10px] uppercase font-bold mb-3" style={{ fontFamily: "DMMono_500Medium" }}>
+                        <View className="mb-2">
+                            <Text className="text-sky-500 text-[10px] uppercase font-bold mb-2" style={{ fontFamily: "DMMono_500Medium" }}>
                                 Mineral Content
                             </Text>
                             {Object.entries(water.minerals || {}).map(([key, value]) => {
                                 if (value === undefined || value === null) return null;
                                 return (
-                                    <View key={key} className="flex-row justify-between py-2 border-b border-sky-800/50">
+                                    <View key={key} className="flex-row justify-between py-1.5 border-b border-sky-800/50">
                                         <Text className="text-sky-300 text-xs capitalize" style={{ fontFamily: "DMMono_400Regular" }}>
                                             {key}
                                         </Text>
@@ -166,8 +170,11 @@ export const WaterCard: React.FC<WaterCardProps> = ({ water }) => {
                             })}
                         </View>
 
+                        {/* Spacer to push BIO down */}
+                        <View className="flex-1" />
+
                         {/* Certification / Footer */}
-                        <View className="mt-6 flex-row items-center opacity-50">
+                        <View className="mt-4 flex-row items-center opacity-50">
                             <View className="w-8 h-8 rounded-full border border-sky-400 items-center justify-center mr-3">
                                 <Text className="text-sky-400 text-[8px] font-bold">BIO</Text>
                             </View>
